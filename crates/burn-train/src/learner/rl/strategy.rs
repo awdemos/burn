@@ -18,7 +18,7 @@ pub struct RLComponents<RLC: RLComponentsTypes> {
     pub checkpointer: Option<RLCheckpointer<RLC>>,
     /// Enables gradients accumulation.
     pub grad_accumulation: Option<usize>,
-    /// An [Interupter](Interrupter) that allows aborting the training/evaluation process early.
+    /// An [Interrupter](Interrupter) that allows aborting the training/evaluation process early.
     pub interrupter: Interrupter,
     /// An [EventProcessor](crate::EventProcessorTraining) that processes events happening during training and evaluation.
     pub event_processor: RLEventProcessorType<RLC>,
