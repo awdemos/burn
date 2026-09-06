@@ -18,7 +18,7 @@ pub(crate) struct WorkerComponents {
     pub num_epochs: usize,
     /// Enables gradients accumulation.
     pub grad_accumulation: Option<usize>,
-    /// An [Interupter](Interrupter) that allows aborting the training/evaluation process early.
+    /// An [Interrupter](Interrupter) that allows aborting the training/evaluation process early.
     pub interrupter: Interrupter,
     /// Cloneable reference to an early stopping strategy.
     pub early_stopping: Option<EarlyStoppingStrategyRef>,
