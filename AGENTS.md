@@ -1,68 +1,42 @@
-# Burn — Agent Guide
+# Burn
 
-## Overview
+## OVERVIEW
 
-Awdeemos fork of [tracel-ai/burn](https://github.com/tracel-ai/burn), a Rust deep
-learning framework and tensor library. This is a large Cargo workspace with many
-crates, examples, and an `xtask` command runner.
+Rust deep-learning framework and tensor library. Burns unifies training and inference in one codebase, with multi-platform backends via CubeCL (CUDA, ROCm, Metal, Vulkan, WebGPU, CPU) and simpler backends (LibTorch, pure-Rust CPU, no_std).
 
-## Project Layout
+## STRUCTURE
 
-| Path | Purpose |
-|------|---------|
-| `crates/` | Core workspace crates: `burn-core`, `burn-ndarray`, `burn-cuda`, `burn-train`, `burn-wgpu`, etc. |
-| `examples/` | End-to-end examples (image classification, text generation, etc.) |
-| `burn-book/` / `contributor-book/` | Documentation |
-| `xtask/` | Task runner for validation, tests, builds, publishing |
-
-## Build Commands
-
-```bash
-# Check a CPU-only backend (no GPU deps required)
-cargo check -p burn-ndarray
-
-# Build a specific example
-cargo build -p mnist
+```
+crates/               Workspace crates (burn-core, burn-autodiff, burn-cubecl, burn-dataset, burn-nn, burn-optim, ...)
+examples/             Ready-to-run examples (mnist, custom-wgpu, etc.)
+burn-book/            mdBook user guide
+contributor-book/     mdBook contributor guide
+xtask/                Maintenance tasks (semver checks, typos, etc.)
 ```
 
-## Test Commands
+## COMMANDS
 
 ```bash
-# Unit tests for the CPU backend
-cargo test -p burn-ndarray
-
-# Run integration checks via xtask (requires compatible backends / may need libtorch)
-cargo xtask test all --ci dev --backend ndarray
+cargo build                                    # Build the workspace
+cargo test                                     # Run tests (long; use --package to scope)
+cargo test -p burn-core                        # Run tests for one crate
+cargo run --example mnist --release            # Run the MNIST example
+cargo xtask typos                              # Check for typos
+cargo xtask semver-checks                    # Check semantic versioning
 ```
 
-## Lint / Validation
+## SETUP
 
-```bash
-# Fast PR checks (may require GPU backends to fully pass)
-cargo xtask validate --backend ndarray
+- Install Rust 1.78+ (check `Cargo.toml` / `rust-toolchain.toml` if present).
+- For GPU backends install the matching vendor toolchain (CUDA / ROCm / Metal SDK).
+- Run `cargo build` to fetch and compile dependencies.
 
-# Format check
-cargo fmt -- --check
+## CODE STYLE
 
-# Clippy
-cargo clippy --workspace -- -D warnings
-```
+- Rust edition 2021.
+- Run `cargo fmt` and `cargo clippy --all-targets` before committing.
+- Follow `CONTRIBUTING.md` for commit-message and PR conventions.
 
-## Key Conventions
+## DEPLOYMENT
 
-- **Workspace crate**: nearly all code lives under `crates/`.
-- **Backend trait system**: new hardware support is added as a `Backend` impl.
-- **xtask aliases**: `.cargo/config.toml` aliases `cargo xtask` and `cargo run-checks`.
-- **Tests use Gherkin-ish Ginkgo via `rstest`/custom harnesses** in many crates.
-
-## Common Gotchas
-
-- Full `cargo xtask validate` may fail locally if `libtorch`/CUDA/ROCm deps are missing.
-- The `tch` backend needs a working PyTorch/LibTorch install.
-- `cargo check -p burn-ndarray` is a good smoke test that does not require GPU libs.
-- Some examples are excluded from the workspace (`examples/notebook`, `examples/raspberry-pi-pico`, `examples/dqn-agent`).
-
-## Deployment
-
-No Dagger/Jenkins workflow present. Use `cargo xtask build` for release artifacts;
-crates are published via `cargo xtask publish`.
+No Dagger module or recognized deployment configuration was found. The project publishes crates to crates.io via GitHub Actions.
